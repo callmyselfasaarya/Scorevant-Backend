@@ -8,11 +8,20 @@ export class User {
   @Prop({ required: true, unique: true, lowercase: true, trim: true })
   email: string;
 
-  @Prop({ required: true })
-  passwordHash: string;
+  @Prop()
+  passwordHash?: string;
 
   @Prop({ trim: true })
   fullName?: string;
+
+  @Prop()
+  hashedRefreshToken?: string;
+
+  @Prop()
+  provider?: string;
+
+  @Prop()
+  providerId?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

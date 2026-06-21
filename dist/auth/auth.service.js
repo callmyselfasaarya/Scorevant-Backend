@@ -51,6 +51,7 @@ const mongoose_1 = require("@nestjs/mongoose");
 const jwt_1 = require("@nestjs/jwt");
 const mongoose_2 = require("mongoose");
 const bcrypt = __importStar(require("bcrypt"));
+const crypto = __importStar(require("crypto"));
 const user_schema_1 = require("../schemas/user.schema");
 let AuthService = class AuthService {
     userModel;
@@ -76,7 +77,7 @@ let AuthService = class AuthService {
     async login(email, password) {
         const normalizedEmail = email.trim().toLowerCase();
         const user = await this.userModel.findOne({ email: normalizedEmail });
-        if (!user) {
+        if (!user || !user.passwordHash) {
             throw new common_1.UnauthorizedException('Invalid email or password');
         }
         const valid = await bcrypt.compare(password, user.passwordHash);
@@ -92,13 +93,79 @@ let AuthService = class AuthService {
         }
         return this.toPublicUser(user);
     }
-    buildAuthResponse(user) {
+    async validateSocialLogin(provider, email, providerId, fullName) {
+        const normalizedEmail = email.trim().toLowerCase();
+        let user = await this.userModel.findOne({ email: normalizedEmail });
+        if (user) {
+            if (!user.provider || !user.providerId) {
+                user.provider = provider;
+                user.providerId = providerId;
+                if (fullName && !user.fullName) {
+                    user.fullName = fullName.trim();
+                }
+                await user.save();
+            }
+        }
+        else {
+            user = await this.userModel.create({
+                email: normalizedEmail,
+                fullName: fullName ? fullName.trim() : undefined,
+                provider,
+                providerId,
+            });
+        }
+        return this.buildAuthResponse(user);
+    }
+    async refreshTokens(refreshToken) {
+        try {
+            const payload = await this.jwtService.verifyAsync(refreshToken);
+            const userId = payload.sub;
+            const user = await this.userModel.findById(userId);
+            if (!user || !user.hashedRefreshToken) {
+                throw new common_1.UnauthorizedException('Access Denied');
+            }
+            const hashedIncoming = crypto
+                .createHash('sha256')
+                .update(refreshToken)
+                .digest('hex');
+            const matches = hashedIncoming === user.hashedRefreshToken;
+            if (!matches) {
+                throw new common_1.UnauthorizedException('Access Denied');
+            }
+            return this.buildAuthResponse(user);
+        }
+        catch {
+            throw new common_1.UnauthorizedException('Access Denied');
+        }
+    }
+    async logout(userId) {
+        await this.userModel.updateOne({ _id: userId }, { $unset: { hashedRefreshToken: 1 } });
+    }
+    async buildAuthResponse(user) {
         const publicUser = this.toPublicUser(user);
-        const access_token = this.jwtService.sign({
+        const payload = {
             sub: user._id.toString(),
             email: user.email,
+        };
+        const access_token = this.jwtService.sign(payload, {
+            expiresIn: '15m',
         });
-        return { access_token, user: publicUser };
+        const refresh_token = this.jwtService.sign({
+            ...payload,
+            nonce: Math.random().toString(36).substring(2, 15),
+        }, {
+            expiresIn: '7d',
+        });
+        const hashedRefreshToken = crypto
+            .createHash('sha256')
+            .update(refresh_token)
+            .digest('hex');
+        await this.userModel.updateOne({ _id: user._id }, { hashedRefreshToken });
+        return {
+            access_token,
+            refresh_token,
+            user: publicUser,
+        };
     }
     toPublicUser(user) {
         return {

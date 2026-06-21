@@ -13,7 +13,7 @@ async function bootstrap() {
         crossOriginResourcePolicy: { policy: 'cross-origin' },
     }));
     app.enableCors({
-        origin: ['http://localhost:5173', 'https://scorevant-frontend.vercel.app/'],
+        origin: ['http://localhost:5173', 'https://scorevant-frontend.vercel.app'],
         credentials: true,
     });
     app.useGlobalPipes(new common_1.ValidationPipe({

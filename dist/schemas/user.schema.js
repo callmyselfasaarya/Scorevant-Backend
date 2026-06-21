@@ -15,6 +15,9 @@ let User = class User {
     email;
     passwordHash;
     fullName;
+    hashedRefreshToken;
+    provider;
+    providerId;
 };
 exports.User = User;
 __decorate([
@@ -22,13 +25,25 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], User.prototype, "passwordHash", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ trim: true }),
     __metadata("design:type", String)
 ], User.prototype, "fullName", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", String)
+], User.prototype, "hashedRefreshToken", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", String)
+], User.prototype, "provider", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", String)
+], User.prototype, "providerId", void 0);
 exports.User = User = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true })
 ], User);

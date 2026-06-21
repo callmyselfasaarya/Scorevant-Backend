@@ -14,6 +14,7 @@ const jwt_1 = require("@nestjs/jwt");
 const mongoose_1 = require("@nestjs/mongoose");
 const jwt_strategy_1 = require("./jwt.strategy");
 const auth_service_1 = require("./auth.service");
+const social_auth_service_1 = require("./social-auth.service");
 const auth_controller_1 = require("./auth.controller");
 const user_schema_1 = require("../schemas/user.schema");
 let AuthModule = class AuthModule {
@@ -28,15 +29,15 @@ exports.AuthModule = AuthModule = __decorate([
                 useFactory: (configService) => ({
                     secret: configService.get('JWT_SECRET') ||
                         'dev-secret-change-in-production',
-                    signOptions: { expiresIn: '7d' },
+                    signOptions: { expiresIn: '15m' },
                 }),
                 inject: [config_1.ConfigService],
             }),
             mongoose_1.MongooseModule.forFeature([{ name: user_schema_1.User.name, schema: user_schema_1.UserSchema }]),
         ],
         controllers: [auth_controller_1.AuthController],
-        providers: [auth_service_1.AuthService, jwt_strategy_1.JwtStrategy],
-        exports: [passport_1.PassportModule, auth_service_1.AuthService, jwt_1.JwtModule],
+        providers: [auth_service_1.AuthService, social_auth_service_1.SocialAuthService, jwt_strategy_1.JwtStrategy],
+        exports: [passport_1.PassportModule, auth_service_1.AuthService, social_auth_service_1.SocialAuthService, jwt_1.JwtModule],
     })
 ], AuthModule);
 //# sourceMappingURL=auth.module.js.map
