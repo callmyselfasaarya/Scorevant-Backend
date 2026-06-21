@@ -12,7 +12,10 @@ async function bootstrap() {
   );
 
   app.enableCors({
-    origin: ['http://localhost:5173', 'https://scorevant-frontend.vercel.app/'],
+    origin: [
+      'http://localhost:5173',
+      'https://scorevant-frontend.vercel.app',
+    ],
     credentials: true,
   });
   app.useGlobalPipes(
