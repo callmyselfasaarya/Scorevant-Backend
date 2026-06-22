@@ -18,7 +18,7 @@ export class Tournament {
   status: string;
 
   @Prop({ required: false })
-  userId?: string; // Optional for backward compatibility, but holds the Supabase Auth user ID
+  userId?: string; // Optional for backward compatibility, but holds the Auth user ID
 }
 
 export const TournamentSchema = SchemaFactory.createForClass(Tournament);

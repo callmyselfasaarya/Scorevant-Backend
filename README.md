@@ -110,7 +110,6 @@ Scorevant Backend is backed by MongoDB with structural schemas managed by Mongoo
    PORT=3000
    MONGODB_URI=mongodb://127.0.0.1:27017/scorevant
    JWT_SECRET=your-jwt-secret-at-least-32-chars
-   SUPABASE_JWT_SECRET=optional-supabase-jwt-secret
    FRONTEND_URL=http://localhost:5173
    ```
 

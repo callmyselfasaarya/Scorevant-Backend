@@ -6,7 +6,7 @@ export type RefereeProfileDocument = RefereeProfile & Document;
 @Schema({ timestamps: true })
 export class RefereeProfile {
   @Prop({ required: true, unique: true })
-  userId: string; // Supabase Auth User ID
+  userId: string; // Auth User ID
 
   @Prop({ required: true })
   email: string;
