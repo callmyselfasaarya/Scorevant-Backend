@@ -48,18 +48,7 @@ export class AuthController {
     );
   }
 
-  @Post('apple')
-  async appleLogin(@Body() body: { identityToken: string }) {
-    const profile = await this.socialAuthService.verifyAppleToken(
-      body.identityToken,
-    );
-    return this.authService.validateSocialLogin(
-      'apple',
-      profile.email,
-      profile.providerId,
-      profile.fullName,
-    );
-  }
+
 
   @Post('refresh')
   refresh(@Body() body: { refreshToken: string }) {

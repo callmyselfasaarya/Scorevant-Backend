@@ -55,10 +55,14 @@ let SocialAuthService = class SocialAuthService {
         this.jwtService = jwtService;
     }
     async verifyGoogleToken(idToken) {
-        if (idToken.startsWith('mock_google_token_') && (process.env.NODE_ENV === 'development' || this.configService.get('NODE_ENV') === 'development')) {
+        if (idToken.startsWith('mock_google_token_') &&
+            (process.env.NODE_ENV === 'development' ||
+                this.configService.get('NODE_ENV') === 'development')) {
             const parts = idToken.split('_');
             const email = parts[3] || 'mockuser@example.com';
-            const fullName = parts[4] ? decodeURIComponent(parts[4]) : 'Mock Google User';
+            const fullName = parts[4]
+                ? decodeURIComponent(parts[4])
+                : 'Mock Google User';
             return {
                 email,
                 providerId: `google_mock_id_${email.replace(/[@.]/g, '_')}`,
@@ -89,10 +93,14 @@ let SocialAuthService = class SocialAuthService {
         }
     }
     async verifyFacebookToken(accessToken) {
-        if (accessToken.startsWith('mock_facebook_token_') && (process.env.NODE_ENV === 'development' || this.configService.get('NODE_ENV') === 'development')) {
+        if (accessToken.startsWith('mock_facebook_token_') &&
+            (process.env.NODE_ENV === 'development' ||
+                this.configService.get('NODE_ENV') === 'development')) {
             const parts = accessToken.split('_');
             const email = parts[3] || 'mockuser@example.com';
-            const fullName = parts[4] ? decodeURIComponent(parts[4]) : 'Mock Facebook User';
+            const fullName = parts[4]
+                ? decodeURIComponent(parts[4])
+                : 'Mock Facebook User';
             return {
                 email,
                 providerId: `facebook_mock_id_${email.replace(/[@.]/g, '_')}`,
@@ -120,10 +128,14 @@ let SocialAuthService = class SocialAuthService {
         }
     }
     async verifyAppleToken(identityToken) {
-        if (identityToken.startsWith('mock_apple_token_') && (process.env.NODE_ENV === 'development' || this.configService.get('NODE_ENV') === 'development')) {
+        if (identityToken.startsWith('mock_apple_token_') &&
+            (process.env.NODE_ENV === 'development' ||
+                this.configService.get('NODE_ENV') === 'development')) {
             const parts = identityToken.split('_');
             const email = parts[3] || 'mockuser@example.com';
-            const fullName = parts[4] ? decodeURIComponent(parts[4]) : 'Mock Apple User';
+            const fullName = parts[4]
+                ? decodeURIComponent(parts[4])
+                : 'Mock Apple User';
             return {
                 email,
                 providerId: `apple_mock_id_${email.replace(/[@.]/g, '_')}`,
