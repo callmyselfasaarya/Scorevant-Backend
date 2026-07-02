@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Schema as MongooseSchema } from 'mongoose';
 
 export type TournamentDocument = Tournament & Document;
 
@@ -19,6 +19,9 @@ export class Tournament {
 
   @Prop({ required: false })
   userId?: string; // Optional for backward compatibility, but holds the Auth user ID
+
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Court', default: null })
+  courtId?: string | null;
 }
 
 export const TournamentSchema = SchemaFactory.createForClass(Tournament);

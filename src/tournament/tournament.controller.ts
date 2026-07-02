@@ -25,6 +25,7 @@ export class TournamentController {
       sportType: string;
       maxSets: number;
       entrants: { name: string; seed?: number }[];
+      courtId?: string;
     },
   ) {
     return this.tournamentService.createTournament(req.user.userId, data);

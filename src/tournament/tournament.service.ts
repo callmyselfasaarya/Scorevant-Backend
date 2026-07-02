@@ -29,6 +29,7 @@ export class TournamentService {
       sportType: string;
       maxSets: number;
       entrants: { name: string; seed?: number }[];
+      courtId?: string;
     },
   ) {
     const tournament = await this.tournamentModel.create({
@@ -37,6 +38,7 @@ export class TournamentService {
       maxSets: data.maxSets,
       userId,
       status: 'Upcoming',
+      courtId: data.courtId || null,
     });
 
     const entrantDocs = data.entrants.map((e) => ({
@@ -193,7 +195,7 @@ export class TournamentService {
     if (!match) throw new NotFoundException('Match not found');
 
     if (data.score) match.score = data.score;
-    if (data.status) match.status = data.status;
+    if (data.status) match.status = data.status.charAt(0).toUpperCase() + data.status.slice(1).toLowerCase();
     if (data.winnerId) {
       match.winnerId = data.winnerId;
       match.status = 'Completed';
